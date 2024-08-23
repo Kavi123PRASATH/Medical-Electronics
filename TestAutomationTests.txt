@@ -1,0 +1,38 @@
+TestAutomationTests.cs:
+csharp
+using OpenQA.Selenium;
+using OpenQA.Selenium.Chrome;
+using Xunit;
+
+public class TestAutomationTests : IDisposable
+{
+    private readonly IWebDriver _driver;
+    private readonly WikipediaPage _wikipediaPage;
+
+    public TestAutomationTests()
+    {
+        _driver = new ChromeDriver();
+        _wikipediaPage = new WikipediaPage(_driver);
+    }
+
+    [Fact]
+    public void TestWordOccurrencesInTestDrivenDevelopmentSection()
+    {
+        var text = _wikipediaPage.GetTestDrivenDevelopmentSectionText();
+        var wordOccurrences = WikipediaPage.GetWordOccurrences(text);
+
+        foreach (var entry in wordOccurrences)
+        {
+          
+            Console.WriteLine($"{entry.Key}: {entry.Value}");
+        }
+
+        Assert.True(wordOccurrences.Count > 0, "No words found in the text.");
+    }
+
+    public void Dispose()
+    {
+        _driver.Quit();
+    }
+}
+
